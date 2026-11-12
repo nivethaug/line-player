@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Paper-fold play">
+  <path d="M5 3H36L44 11V43H5Z" fill="#B83227" stroke="#2B211B" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M36 3V11H44" fill="#E7BDA3" stroke="#2B211B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M18 14L33 24L18 34Z" fill="#FFF1D9" stroke="#2B211B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M7 6H33" stroke="#E96C58" stroke-width="1.8"/>
+</svg>

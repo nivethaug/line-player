@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="120" viewBox="0 0 180 120">
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2=".8">
+      <stop offset="0" stop-color="#fff5df"/>
+      <stop offset=".42" stop-color="#f8e5c5"/>
+      <stop offset=".78" stop-color="#e9c99a"/>
+      <stop offset="1" stop-color="#d9b17b"/>
+    </linearGradient>
+    <linearGradient id="fold-face" x1=".1" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#fff9eb"/>
+      <stop offset=".55" stop-color="#f6e3c4"/>
+      <stop offset="1" stop-color="#d9b98e"/>
+    </linearGradient>
+    <linearGradient id="crease" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b98c5b" stop-opacity="0"/>
+      <stop offset=".55" stop-color="#b98c5b" stop-opacity=".58"/>
+      <stop offset="1" stop-color="#6f4a2e" stop-opacity=".72"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="170%" height="170%">
+      <feGaussianBlur stdDeviation="3.2"/>
+    </filter>
+  </defs>
+  <!-- Soft cast shadow hugging the rail base -->
+  <ellipse cx="86" cy="102" rx="70" ry="9" fill="#4d2c16" opacity=".24" filter="url(#shadow)"/>
+  <!-- Main lifted page: broad, low, rounded dome attached to the baseline -->
+  <path d="M12 103
+           C16 86 28 66 46 52
+           C66 36 92 28 114 34
+           C132 39 144 52 147 66
+           C150 77 144 86 130 91
+           C110 99 86 103 60 104
+           C40 105 22 105 12 103Z"
+        fill="url(#page)" stroke="#b58b5e" stroke-width="1.35" stroke-linejoin="round"/>
+  <!-- Raised fold face catching the light -->
+  <path d="M20 100
+           C26 84 38 66 55 53
+           C73 39 95 33 113 38
+           C128 43 138 54 140 65
+           C141 74 134 81 122 86
+           C103 93 80 97 57 99
+           C42 100 28 100 20 100Z"
+        fill="url(#fold-face)"/>
+  <!-- Rolled tip curling under at the right edge -->
+  <path d="M140 65
+           C148 61 154 64 154 71
+           C154 80 146 88 134 91
+           C141 84 144 75 142 68
+           C141 64 141 64 140 65Z"
+        fill="#d9b98e"/>
+  <!-- Soft highlight sweeping the left fold -->
+  <path d="M26 96 C36 76 52 58 72 47" fill="none" stroke="#fff8e8" stroke-width="3.2" stroke-linecap="round" opacity=".85"/>
+  <!-- Fold crease across the crown -->
+  <path d="M46 52 C66 38 94 32 115 38" fill="none" stroke="url(#crease)" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Subtle inner curl crease along the base -->
+  <path d="M57 99 C86 95 112 85 129 68" fill="none" stroke="#c6a078" stroke-width="1.5" opacity=".6"/>
+</svg>

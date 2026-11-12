@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 56" role="img" aria-label="Lifted curling paper page">
+  <path d="M3 51V8L48 4L61 14L47 42Z" fill="#D6BFA0" opacity=".45"/>
+  <path d="M3 48V8L47 4L61 14L47 48Z" fill="#FFF1D9" stroke="#2B211B" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M47 4V14H61" fill="#E6D0B1" stroke="#2B211B" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M3 48L47 14L61 14L47 48Z" fill="#D9C09D" opacity=".75"/>
+  <path d="M3 48L47 14" stroke="#B83227" stroke-width="1.5" opacity=".7"/>
+  <path d="M8 44L42 17" stroke="#FFF9EC" stroke-width="2" opacity=".9"/>
+</svg>

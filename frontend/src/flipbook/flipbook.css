@@ -1,0 +1,611 @@
+/* ═══ Flipbook Player — cream paper, red ink, book-edge frame (per reference) ═══ */
+
+.fb-page {
+  --fb-paper: #fbead4;
+  --fb-paper-2: #f6e2c8;
+  --fb-paper-3: #e9d8be;
+  --fb-ink: #29231f;
+  --fb-red: #b83227;
+  min-height: 100%;
+  background: var(--fb-paper);
+  color: var(--fb-ink);
+  font-family: Georgia, "Times New Roman", serif;
+  position: relative;
+}
+
+/* subtle paper grain */
+.fb-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: radial-gradient(#29231f 0.6px, transparent 0.6px);
+  background-size: 14px 14px;
+}
+
+.fb-shell {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 16px 64px;
+}
+
+/* ── desktop: editorial left, dominant player right ── */
+.fb-columns {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 36px;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .fb-columns { grid-template-columns: 1fr; gap: 24px; }
+}
+
+/* ── skin tab (paper label above the title) ── */
+.fb-skin-tab {
+  display: inline-block;
+  background: var(--fb-paper-2);
+  border: 2px solid var(--fb-ink);
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow: 2px 3px 0 rgba(41, 35, 31, 0.25);
+  margin-bottom: 18px;
+}
+
+.fb-info-title {
+  font-size: clamp(40px, 5vw, 58px);
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.fb-brush {
+  width: 190px;
+  height: 10px;
+  margin: 16px 0 20px;
+  border-radius: 999px 999px 999px 4px;
+  background: var(--fb-red);
+  transform: rotate(-1.2deg);
+  box-shadow: 0 2px 0 rgba(41, 35, 31, 0.15);
+}
+.fb-info-copy {
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 280px;
+}
+
+/* ── three stacked mini-features with red icons ── */
+.fb-minis {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.fb-mini {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-family: Georgia, serif;
+}
+.fb-mini-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+.fb-mini strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.fb-mini em {
+  display: block;
+  font-style: normal;
+  font-size: 13.5px;
+  line-height: 1.45;
+  opacity: 0.75;
+  margin-top: 2px;
+  max-width: 200px;
+}
+
+/* ── the book frame: thick layered page edges + red cover ── */
+.fb-book {
+  position: relative;
+  border-radius: 16px 12px 12px 16px;
+  background: var(--fb-paper-2);
+  border: 2px solid var(--fb-ink);
+  box-shadow:
+    8px 10px 0 -2px var(--fb-paper),
+    11px 13px 0 var(--fb-paper-3),
+    14px 16px 0 var(--fb-red),
+    20px 22px 0 rgba(41, 35, 31, 0.18),
+    0 30px 60px rgba(41, 35, 31, 0.22);
+  padding: 14px 16px;
+}
+
+/* inner cream spread holding video + dock */
+.fb-spread {
+  position: relative;
+  border-radius: 10px;
+  background: var(--fb-paper);
+  border: 2px solid var(--fb-ink);
+  overflow: hidden;
+}
+
+.fb-video-wrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #1a1512;
+  overflow: hidden;
+  z-index: 1;
+}
+.fb-vjs-skin {
+  position: absolute;
+  inset: 0;
+  height: 100% !important;
+  overflow: hidden;
+}
+.fb-vjs-skin video {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* paper title tag + red state tag */
+.fb-tab {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 4;
+  background: var(--fb-paper);
+  border: 2px solid var(--fb-ink);
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--fb-ink);
+  box-shadow: 3px 3px 0 rgba(41, 35, 31, 0.25);
+}
+/* cream paper status tag (per player-only reference) */
+.fb-status {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  background: var(--fb-paper);
+  color: var(--fb-ink);
+  border: 2px solid var(--fb-ink);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  box-shadow: 3px 3px 0 rgba(41, 35, 31, 0.25);
+}
+
+/* big paper-fold play overlay */
+.fb-fold-play {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.fb-fold-play .fb-fold-img {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 8px 14px rgba(41, 35, 31, 0.45));
+  transition: transform 0.2s ease;
+}
+.fb-fold-play:hover .fb-fold-img { transform: scale(1.06); }
+.fb-fold-play:focus-visible {
+  outline: 3px solid var(--fb-red);
+  outline-offset: 4px;
+}
+.fb-hidden { display: none; }
+
+/* ── control dock (inside the book spread, below the video) ── */
+.fb-controls {
+  position: relative;
+  padding: 4px 10px 8px;
+}
+
+/* book-spine seek bar: slim cream paper rail of angled page tiles */
+.fb-seek {
+  position: relative;
+  height: 48px;
+  margin: 2px 6px 0;
+  cursor: pointer;
+  border-radius: 18px;
+}
+.fb-seek:focus-visible {
+  outline: 3px solid var(--fb-red);
+  outline-offset: 3px;
+}
+/* A. outer paper rail — slim cream strip, exact reference geometry */
+.fb-rail {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  right: 0;
+  height: 34px;
+  padding: 3px 5px;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  pointer-events: none;
+  background: linear-gradient(180deg, #f9ecd8 0%, #f3dfc0 100%);
+  border: 1.5px solid #493426;
+  border-radius: 18px;
+  box-shadow:
+    0 2px 0 #b99a72,
+    0 4px 5px rgba(65, 42, 25, 0.20),
+    inset 0 1px 2px rgba(255, 255, 255, 0.75);
+  overflow: visible;
+}
+/* B. page tiles — rounded 3D book spines standing on the shelf rail
+   (reference: leaning gloss-red books → cream flat pages) */
+.fb-page-seg {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  background: linear-gradient(180deg, #fdeed7 0%, #f8e8d2 100%);
+  border: 1px solid #493426;
+  border-radius: 6px 6px 3px 3px;
+  transform: skewX(-8deg);
+  box-shadow:
+    0 1px 0 rgba(91, 57, 33, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.75);
+  transition: background 100ms linear;
+}
+/* soft sheen on cream pages + thin page-edge line near the base */
+.fb-page-seg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 5px 5px 2px 2px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 42%),
+    repeating-linear-gradient(0deg, rgba(73, 52, 38, 0.10) 0 1px, transparent 1px 4px);
+}
+/* C. played pages — glossy rounded red book spines. Near the boundary the
+   spines catch light and fade salmon → deep red (tier 0 = closest, lightest) */
+.fb-page-seg.is-played {
+  border-color: #5d1f17;
+  box-shadow:
+    0 1px 0 #571e15,
+    inset 0 2px 2px rgba(255, 214, 180, 0.50),
+    inset 0 -3px 4px rgba(70, 15, 8, 0.45);
+}
+.fb-page-seg.is-played.tier-2 {
+  background: linear-gradient(180deg, #e8593f 0%, #cf3527 45%, #9c1f16 100%);
+}
+.fb-page-seg.is-played.tier-1 {
+  background: linear-gradient(180deg, #ef7f63 0%, #dd5640 45%, #b02c1f 100%);
+}
+.fb-page-seg.is-played.tier-0 {
+  background: linear-gradient(180deg, #f59d83 0%, #ec7a5e 45%, #cf4f38 100%);
+}
+.fb-page-seg.is-played.tier-0,
+.fb-page-seg.is-played.tier-1,
+.fb-page-seg.is-played.tier-2 {
+  border-radius: 8px 8px 3px 3px;
+}
+/* glossy spine highlight + rounded top glare (replaces the cream hatch) */
+.fb-page-seg.is-played::after {
+  border-radius: 7px 7px 2px 2px;
+  background:
+    linear-gradient(180deg, rgba(255, 232, 205, 0.55), transparent 38%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.30) 0 18%, transparent 30%),
+    repeating-linear-gradient(0deg, rgba(255, 226, 190, 0.14) 0 1px, transparent 1px 5px);
+}
+/* boundary overlay aligned exactly with the tile row (rail border+padding = 6.5px) */
+.fb-track {
+  position: absolute;
+  top: 7px;
+  height: 34px;
+  left: 6.5px;
+  right: 6.5px;
+  pointer-events: none;
+}
+/* D. page curl — reference_book_page_curl.svg: two-sided cream book-page
+   fold with a curved lifted edge and baked-in warm shadow. Native 180×120
+   (ratio 1.5) — never stretched, skewed or rotated. Compact grounded fold:
+   ~88×59px, base seated on the rail, only the tip rises ~25px above it,
+   center on the red/cream boundary. */
+.fb-curl {
+  position: absolute;
+  bottom: -1px;
+  width: clamp(76px, 13%, 90px);
+  height: auto;
+  aspect-ratio: 180 / 120;
+  /* curl CENTER lands exactly on the red/cream boundary */
+  transform: translateX(-50%);
+  z-index: 5;
+  filter: drop-shadow(0 1px 1.5px rgba(72, 42, 22, 0.18));
+}
+/* E. bookmark playhead — red fabric ribbon with V-notch hanging in front of
+   the rail at the exact progress (foreground, above the curl) */
+.fb-playhead {
+  position: absolute;
+  top: -12px;
+  width: 32px;
+  height: 72px;
+  transform: translateX(-50%);
+  z-index: 8;
+}
+.fb-playhead img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(1px 2px 2px rgba(55, 30, 18, 0.40));
+}
+
+/* transport row */
+.fb-transport {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  row-gap: 8px;
+  column-gap: 10px;
+  margin-top: 8px;
+}
+.fb-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+/* dark-ink icon buttons on cream — no boxed outlines, per reference */
+.fb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.fb-btn:hover { background: rgba(41, 35, 31, 0.06); }
+.fb-btn:active { transform: translateY(1px); }
+.fb-btn:focus-visible {
+  outline: 3px solid var(--fb-red);
+  outline-offset: 2px;
+}
+/* bold circular skip buttons */
+.fb-btn img { width: 28px; height: 28px; }
+.fb-btn:not(.fb-btn-fold):not(.fb-btn-plain) {
+  border: 2px solid var(--fb-ink);
+  border-radius: 999px;
+  background: var(--fb-paper);
+  box-shadow: 2px 3px 0 rgba(41, 35, 31, 0.3);
+  min-width: 44px;
+  min-height: 44px;
+}
+.fb-btn:not(.fb-btn-fold):not(.fb-btn-plain):hover { background: var(--fb-paper-2); }
+/* the larger tactile red paper-fold play key */
+.fb-btn-fold {
+  background: var(--fb-red);
+  border: 2.5px solid var(--fb-ink);
+  border-radius: 14px;
+  box-shadow: 3px 4px 0 rgba(41, 35, 31, 0.35);
+  min-width: 54px;
+  min-height: 54px;
+}
+.fb-btn-fold img { width: 34px; height: 34px; }
+.fb-btn-fold:hover { background: var(--fb-red); filter: brightness(1.05); }
+.fb-btn-active { background: rgba(184, 50, 39, 0.18); }
+
+/* red-ink time readout */
+.fb-time {
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--fb-red);
+  white-space: nowrap;
+}
+.fb-time .fb-time-dim { color: var(--fb-ink); opacity: 0.55; }
+
+/* thin refined ink dividers between dock groups */
+.fb-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(41, 35, 31, 0.3);
+}
+
+/* volume: speaker + bookmark-track slider */
+.fb-vol {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fb-vol-track {
+  position: relative;
+  align-self: center;
+  flex: 0 0 auto;
+  width: 112px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+.fb-vol input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  z-index: 1;
+  width: 112px;
+  height: 6px;
+  margin: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--fb-red), #d9b99a);
+  outline: none;
+  accent-color: var(--fb-red);
+  cursor: pointer;
+}
+.fb-vol input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 26px;
+  border: 0;
+  border-radius: 0;
+  background: transparent url("/uploads/image_2194_bookmark-ribbon_67545a8a.svg") center / contain no-repeat;
+  box-shadow: none;
+  cursor: grab;
+}
+.fb-vol input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 26px;
+  border: 0;
+  border-radius: 0;
+  background: transparent url("/uploads/image_2194_bookmark-ribbon_67545a8a.svg") center / contain no-repeat;
+  box-shadow: none;
+  cursor: grab;
+}
+.fb-vol input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--fb-red), #d9b99a);
+}
+.fb-vol-thumb { display: none; }
+.fb-utilities > * { flex: 0 0 auto; }
+
+/* ── keyboard shortcuts — single horizontal strip ── */
+.fb-shortcuts {
+  margin-top: 36px;
+  border: 2px solid var(--fb-ink);
+  border-radius: 12px;
+  background: var(--fb-paper-2);
+  box-shadow: 4px 4px 0 var(--fb-paper-3);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.fb-shortcuts h2 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fb-red);
+  margin: 0;
+  flex: 0 0 auto;
+}
+.fb-keys {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.fb-key-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+.fb-key-row kbd {
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  border: 2px solid var(--fb-ink);
+  border-radius: 6px;
+  background: var(--fb-paper);
+  padding: 3px 10px;
+  box-shadow: 2px 2px 0 rgba(41, 35, 31, 0.3);
+  min-width: 34px;
+  text-align: center;
+}
+
+/* ── four illustration feature cards ── */
+.fb-features {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 900px) { .fb-features { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .fb-features { grid-template-columns: 1fr; } }
+.fb-feature {
+  border: 2px solid var(--fb-ink);
+  border-radius: 12px;
+  background: var(--fb-paper-2);
+  box-shadow: 4px 4px 0 var(--fb-paper-3);
+  padding: 14px 16px 18px;
+}
+.fb-feature-art {
+  height: 96px;
+  border: 2px solid var(--fb-ink);
+  border-radius: 8px;
+  background: var(--fb-paper);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.fb-feature h2 {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fb-ink);
+  text-align: center;
+  margin: 0;
+}
+
+/* ── reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .fb-fold-play .fb-fold-img,
+  .fb-btn { transition: none; }
+  .fb-fold-play:hover .fb-fold-img { transform: none; }
+}
+
+/* ── tablet/mobile ── */
+@media (max-width: 900px) {
+  .fb-info-copy { max-width: none; }
+}
+@media (max-width: 639px) {
+  .fb-shell { padding: 24px 12px 48px; }
+  .fb-book { padding: 10px 12px; box-shadow:
+    6px 8px 0 -2px var(--fb-paper),
+    9px 10px 0 var(--fb-red),
+    14px 16px 0 rgba(41, 35, 31, 0.18),
+    0 22px 44px rgba(41, 35, 31, 0.22); }
+  .fb-fold-play .fb-fold-img { width: 72px; height: 72px; }
+  .fb-transport { flex-wrap: wrap; justify-content: center; }
+  .fb-utilities { width: 100%; justify-content: center; margin-top: 6px; }
+  .fb-vol-track { width: 72px; }
+  .fb-vol input[type="range"] { width: 72px; }
+  .fb-time { font-size: 12px; }
+  .fb-shortcuts { flex-direction: column; align-items: flex-start; gap: 12px; }
+}

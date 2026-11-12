@@ -1,0 +1,601 @@
+/* ══════════════════════════════════════════════════════════════════════
+   Field Recorder — Cinema Edition
+   Graphite hardware player: #232426 body, #0E0F10 wells, signal orange.
+   No glassmorphism, no gradients, no purple. Industrial flat panels.
+   ══════════════════════════════════════════════════════════════════════ */
+
+.fr-player {
+  --fr-body: #232426;
+  --fr-edge: #2e3033;
+  --fr-well: #0e0f10;
+  --fr-orange: #ff5a1f;
+  --fr-engraved: #d9dadb;
+  --fr-timecode: #f2e9d8;
+  --fr-metal: #a9acaf;
+  --fr-metal-dark: #8e9194;
+  max-width: 960px;
+  margin: 2rem auto;
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--fr-engraved);
+}
+
+/* ── stage frame ────────────────────────────────────────────────────── */
+
+.fr-stage {
+  position: relative;
+  background: var(--fr-body);
+  border: 1px solid var(--fr-edge);
+  border-radius: 10px;
+  padding: 0 0 14px;
+  overflow: hidden;
+}
+
+.fr-stage-fs {
+  border-radius: 0;
+  padding: 0;
+}
+
+.fr-header {
+  position: absolute;
+  top: 14px;
+  left: 22px;
+  right: 22px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: #f2f2f2;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+  pointer-events: none;
+}
+
+.fr-header .fr-tag,
+.fr-header .fr-brand {
+  pointer-events: auto;
+}
+
+.fr-brand em {
+  font-style: normal;
+  font-weight: 500;
+  color: #c9cdd2;
+}
+
+.fr-header-tags {
+  background: rgb(10 11 12 / 0.55);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+
+.fr-header-tags {
+  display: flex;
+  gap: 8px;
+}
+
+.fr-tag {
+  border: 1px solid #6a6e72;
+  background: rgb(16 17 18 / 0.6);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e6e8ea;
+}
+
+.fr-tag-rec {
+  color: #ff5147;
+  border-color: #ff5147;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fr-rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff5147;
+  animation: fr-rec-blink 1.2s steps(2) infinite;
+}
+
+@keyframes fr-rec-blink {
+  50% { opacity: 0.25; }
+}
+
+/* ── video frame + viewfinder ───────────────────────────────────────── */
+
+.fr-video-frame {
+  position: relative;
+  margin: 0;
+}
+
+.fr-video-frame video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  background: var(--fr-well);
+  border-radius: 6px;
+}
+
+.fr-video-frame > div:not(.fr-overlay) {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* default-skin extras must never push the frame taller than the video */
+.fr-vjs-skin .media-title,
+.fr-vjs-skin .media-status-announcer,
+.fr-vjs-skin .video-status-indicators {
+  display: none;
+}
+
+/* buffering loader: hidden unless actively buffering, centered when shown.
+   (skin's equivalents are scoped to [data-theme="default"], which we don't set) */
+.fr-vjs-skin .media-buffering-indicator {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-content: center;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.fr-vjs-skin .media-buffering-indicator[data-visible] {
+  display: grid;
+}
+
+.fr-vjs-skin .media-buffering-indicator .media-buffering-indicator-spinner-icon {
+  position: static;
+  margin: auto;
+  width: 40px;
+  height: 40px;
+  color: #ff5a1f;
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.6));
+}
+
+.fr-vjs-skin
+  .media-buffering-indicator:not([data-visible])
+  .media-buffering-indicator-spinner-icon {
+  display: none;
+  animation: none;
+}
+
+.fr-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.fr-corner {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  opacity: 0.95;
+  pointer-events: none;
+}
+.fr-corner::before,
+.fr-corner::after {
+  content: "";
+  position: absolute;
+  background: #f2f2f2;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.5);
+}
+.fr-corner::before { width: 100%; height: 3px; }
+.fr-corner::after { width: 3px; height: 100%; }
+.fr-corner-tl { top: 14px; left: 14px; }
+.fr-corner-tl::before { top: 0; left: 0; }
+.fr-corner-tl::after { top: 0; left: 0; }
+.fr-corner-tr { top: 14px; right: 14px; }
+.fr-corner-tr::before { top: 0; right: 0; }
+.fr-corner-tr::after { top: 0; right: 0; }
+.fr-corner-bl { bottom: 14px; left: 14px; }
+.fr-corner-bl::before { bottom: 0; left: 0; }
+.fr-corner-bl::after { bottom: 0; left: 0; }
+.fr-corner-br { bottom: 14px; right: 14px; }
+.fr-corner-br::before { bottom: 0; right: 0; }
+.fr-corner-br::after { bottom: 0; right: 0; }
+
+/* centered thin white cross, like a camera center mark */
+.fr-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  pointer-events: auto;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.fr-crosshair::before,
+.fr-crosshair::after {
+  content: "";
+  position: absolute;
+  background: #f2f2f2;
+  opacity: 0.35;
+  transition: opacity 200ms ease;
+  box-shadow: 0 0 2px rgb(0 0 0 / 0.7);
+}
+.fr-crosshair::before { width: 30px; height: 1.5px; }
+.fr-crosshair::after { width: 1.5px; height: 30px; }
+
+.fr-crosshair img {
+  display: none;
+}
+
+.fr-crosshair:hover::before,
+.fr-crosshair:hover::after,
+.fr-crosshair:focus-visible::before,
+.fr-crosshair:focus-visible::after {
+  opacity: 0.9;
+}
+
+.fr-crosshair-on::before,
+.fr-crosshair-on::after {
+  opacity: 0.85;
+}
+
+/* ── hardware dock ──────────────────────────────────────────────────── */
+
+.fr-dock {
+  position: relative;
+  margin: 14px 14px 10px;
+  background: var(--fr-body);
+  border: 2px solid var(--fr-edge);
+  border-radius: 10px;
+  padding: 12px 16px 12px;
+  box-shadow: inset 0 1px 0 #3a3d40;
+}
+
+.fr-screw {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+}
+
+.fr-screw-tl { top: 5px; left: 5px; }
+.fr-screw-tr { top: 5px; right: 5px; }
+.fr-screw-bl { bottom: 5px; left: 5px; }
+.fr-screw-br { bottom: 5px; right: 5px; }
+
+/* timeline */
+
+.fr-timeline-wrap {
+  position: relative;
+  margin: 2px 4px 10px;
+}
+
+.fr-ruler-bg {
+  display: none;
+}
+
+.fr-timeline-wrap {
+  background-image: url("/assets/fr/hardware/seek-ruler.svg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.fr-timeline-wrap > * {
+  pointer-events: auto;
+}
+
+.fr-timeline {
+  position: relative;
+  height: 44px;
+  cursor: pointer;
+  border-radius: 6px;
+  outline-offset: 2px;
+}
+
+.fr-timeline:focus-visible {
+  outline: 2px solid var(--fr-orange);
+}
+
+.fr-timeline-buffer {
+  position: absolute;
+  top: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+  background: #3f4245;
+  border-radius: 2px;
+}
+
+.fr-timeline-played {
+  position: absolute;
+  top: 50%;
+  height: 4px;
+  transform: translateY(-50%);
+  background: var(--fr-orange);
+  border-radius: 2px;
+  box-shadow: 0 0 6px hsl(20 100% 55% / 0.5);
+}
+
+.fr-playhead {
+  position: absolute;
+  top: 50%;
+  width: 26px;
+  height: 34px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.fr-tl-time {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--fr-timecode);
+  background: var(--fr-well);
+  border: 1px solid #3a3d40;
+  border-radius: 3px;
+  padding: 1px 6px;
+  pointer-events: none;
+}
+
+.fr-tl-time-left { left: 56px; }
+.fr-tl-time-right { right: 56px; }
+
+.fr-tooltip {
+  position: absolute;
+  top: -30px;
+  transform: translateX(-50%);
+  background: #17181a;
+  border: 1px solid #4a4d50;
+  color: var(--fr-timecode);
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* orange triangle pointer under the tooltip, like the mockup */
+.fr-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: var(--fr-orange);
+  border-bottom-width: 0;
+}
+
+/* transport row */
+
+.fr-transport {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid #4a4d50;
+  background: linear-gradient(180deg, var(--fr-metal) 0%, var(--fr-metal-dark) 100%);
+  color: #1c1d1f;
+  cursor: pointer;
+  transition: filter 150ms ease, transform 100ms ease;
+}
+
+.fr-btn:hover {
+  filter: brightness(1.12);
+}
+
+.fr-btn:active {
+  transform: scale(0.96);
+}
+
+.fr-btn:focus-visible {
+  outline: 2px solid var(--fr-orange);
+  outline-offset: 2px;
+}
+
+.fr-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.fr-btn-play {
+  min-width: 56px;
+  min-height: 48px;
+  background: linear-gradient(180deg, #ff7a3d 0%, var(--fr-orange) 100%);
+  border-color: #d64a16;
+  color: #1c1d1f;
+}
+
+.fr-btn-playing {
+  box-shadow: 0 0 10px hsl(20 100% 55% / 0.55);
+}
+
+.fr-btn-active {
+  color: var(--fr-orange);
+}
+
+.fr-ico {
+  width: 22px;
+  height: 22px;
+  color: currentColor;
+}
+
+.fr-sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 2px;
+  background: #3a3d40;
+}
+
+/* timecode */
+
+.fr-timecode-wrap {
+  display: flex;
+  gap: 10px;
+}
+
+.fr-timecode {
+  background: var(--fr-well);
+  border: 1px solid #3a3d40;
+  border-radius: 4px;
+  padding: 3px 10px;
+  min-width: 128px;
+}
+
+.fr-timecode-dim {
+  opacity: 0.72;
+}
+
+.fr-tc-label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--fr-metal);
+}
+
+.fr-tc-value {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--fr-timecode);
+}
+
+/* volume */
+
+.fr-volume-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fr-volume-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 160px;
+  min-width: 160px;
+}
+
+.fr-vol-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--fr-metal);
+}
+
+.fr-vol-meter {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+
+.fr-led {
+  width: 7px;
+  height: 16px;
+  align-self: flex-end;
+  border-radius: 1px;
+}
+
+.fr-led:nth-child(3n + 2) { height: 11px; }
+.fr-led:nth-child(3n) { height: 7px; }
+
+.fr-led.green { background: #32d45a; }
+.fr-led.yellow { background: #e8d44d; }
+.fr-led.orange { background: var(--fr-orange); }
+.fr-led.off { background: #2a2c2e; }
+
+/* hide the native range input visually; ladder is the display,
+   range stays for pointer/keyboard control */
+.fr-vol-range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+
+/* ── responsive ─────────────────────────────────────────────────────── */
+
+@media (max-width: 720px) {
+  .fr-player { margin: 1rem auto; }
+  .fr-dock { padding: 10px; }
+  .fr-transport { gap: 6px; }
+  .fr-btn { min-width: 40px; min-height: 40px; }
+  .fr-btn-play { min-width: 46px; min-height: 42px; }
+  .fr-sep { display: none; }
+  .fr-timecode-wrap { gap: 6px; }
+  .fr-timecode { min-width: 96px; padding: 2px 6px; }
+  .fr-tc-value { font-size: 13px; }
+  .fr-crosshair { display: none; }
+  .fr-header { padding: 8px 10px 6px; font-size: 11px; }
+  .fr-tag { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fr-rec-dot { animation: none; }
+  .fr-btn, .fr-tooltip, .fr-crosshair img { transition: none; }
+}
+
+/* Hide the default v10 skin chrome: our hardware dock replaces it. The skin
+   wrapper stays in the DOM — the store's fullscreen action targets it. */
+.fr-vjs-skin [class*="control"],
+.fr-vjs-skin [class*="bar"],
+.fr-vjs-skin [class*="menu"],
+.fr-vjs-skin [class*="settings"],
+.fr-vjs-skin [class*="slider"],
+.fr-vjs-skin button:not(.fr-btn):not(.fr-crosshair) {
+  display: none !important;
+  pointer-events: none !important;
+}
+/* Title overlay must never swallow clicks meant for the player */
+.fr-vjs-skin .media-title,
+.fr-vjs-skin .media-poster-image {
+  pointer-events: none !important;
+}
+.fr-vjs-skin video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+}
+.fr-vjs-skin:fullscreen video {
+  width: 100vw;
+  height: 100vh;
+  max-height: none;
+  object-fit: contain;
+}
+/* Hide the seek-preview thumbnail image when there is no thumbnail source
+   (empty src renders a broken-image glyph in some browsers) */
+.media-slider-thumbnail-image[src=""],
+.media-slider-thumbnail-image:not([src]) {
+  display: none !important;
+}
+
+/* Poster must never leak as a static block below the video in the recorder skin */
+.fr-video-frame .media-poster {
+  display: none !important;
+  position: absolute !important;
+}

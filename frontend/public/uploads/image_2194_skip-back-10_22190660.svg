@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Skip backward ten seconds">
+  <path d="M17 10L8 17L17 24" fill="none" stroke="#2B211B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M9 17H24C33 17 39 23 39 31C39 38 33 42 25 42C18 42 13 38 11 33" fill="none" stroke="#2B211B" stroke-width="3" stroke-linecap="round"/>
+  <text x="24" y="31" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="800" fill="#2B211B">10</text>
+</svg>

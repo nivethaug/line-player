@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 48" role="img" aria-label="Flipbook page-stack timeline">
+  <defs>
+    <pattern id="pageLines" width="28" height="48" patternUnits="userSpaceOnUse">
+      <path d="M27.5 1V47" stroke="#2B211B" stroke-width="1.4"/>
+      <path d="M1 4H27" stroke="#FFF4E3" stroke-width="1" opacity=".65"/>
+    </pattern>
+  </defs>
+  <!-- Base fore-edge: layered paper sheets -->
+  <rect x="2" y="5" width="796" height="39" rx="4" fill="#D8C3A5" stroke="#2B211B" stroke-width="1.5"/>
+  <rect x="2" y="2" width="796" height="39" rx="4" fill="#F8E8D0" stroke="#2B211B" stroke-width="1.5"/>
+  <rect x="3" y="3" width="794" height="37" rx="3" fill="url(#pageLines)"/>
+  <!-- This SVG is a reusable visual track; progress is clipped/positioned by the player -->
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="150" viewBox="0 0 900 150">
+<defs>
+<linearGradient id="cream" x2="0" y2="1"><stop stop-color="#f8f5ed"/><stop offset=".55" stop-color="#d8d9d5"/><stop offset="1" stop-color="#b6bec5"/></linearGradient>
+<linearGradient id="blue" x2="0" y2="1"><stop stop-color="#2864a5"/><stop offset="1" stop-color="#12345f"/></linearGradient>
+<linearGradient id="glass" x2="0" y2="1"><stop stop-color="#263e53"/><stop offset="1" stop-color="#0c1927"/></linearGradient>
+</defs>
+<ellipse cx="450" cy="139" rx="420" ry="6" fill="#000" opacity=".13"/>
+<g stroke="#35414b" stroke-width="1.4" stroke-linejoin="round">
+<!-- coaches -->
+<path fill="url(#cream)" d="M20 35Q24 17 44 17H270Q290 17 294 35V112H20Z"/>
+<path fill="url(#cream)" d="M294 35Q298 17 318 17H540Q560 17 564 35V112H294Z"/>
+<path fill="url(#cream)" d="M564 35Q568 17 588 17H765Q786 17 790 38V112H564Z"/>
+<path fill="url(#blue)" stroke="none" d="M20 91H294V112H20ZM294 91H564V112H294ZM564 91H790V112H564Z"/>
+<path fill="#efbd35" stroke="none" d="M20 87H294V92H20ZM294 87H564V92H294ZM564 87H790V92H564Z"/>
+<!-- windows -->
+<g fill="url(#glass)" stroke="#78838c">
+<rect x="40" y="38" width="37" height="34" rx="4"/><rect x="84" y="38" width="37" height="34" rx="4"/><rect x="128" y="38" width="37" height="34" rx="4"/><rect x="172" y="38" width="37" height="34" rx="4"/><rect x="216" y="38" width="37" height="34" rx="4"/><rect x="320" y="38" width="37" height="34" rx="4"/><rect x="364" y="38" width="37" height="34" rx="4"/><rect x="408" y="38" width="37" height="34" rx="4"/><rect x="452" y="38" width="37" height="34" rx="4"/><rect x="496" y="38" width="37" height="34" rx="4"/><rect x="590" y="38" width="37" height="34" rx="4"/><rect x="634" y="38" width="37" height="34" rx="4"/><rect x="678" y="38" width="37" height="34" rx="4"/><rect x="722" y="38" width="37" height="34" rx="4"/>
+</g>
+<!-- doors -->
+<g fill="#d9d9d3" stroke="#78838c"><rect x="264" y="32" width="22" height="57"/><path d="M275 32v57" fill="none"/><rect x="534" y="32" width="22" height="57"/><path d="M545 32v57" fill="none"/><rect x="754" y="32" width="22" height="57"/><path d="M765 32v57" fill="none"/></g>
+<path d="M290 20v92M560 20v92" stroke="#5a626b" stroke-width="5"/>
+<!-- front cab -->
+<path fill="url(#cream)" d="M765 17H800Q829 18 850 42L875 73Q883 84 883 99V112H790V38Q786 20 765 17Z"/>
+<path fill="url(#glass)" d="M790 31Q813 25 832 42L859 73Q868 84 870 96H790Z"/>
+<path fill="#a9cde2" opacity=".2" stroke="none" d="M798 35L818 39L846 70L817 65Z"/>
+<path fill="url(#blue)" stroke="none" d="M790 91H883V112H790Z"/>
+<path fill="#efbd35" stroke="none" d="M790 87H883V92H790Z"/>
+<ellipse cx="862" cy="98" rx="6" ry="4" fill="#fff3bf"/><ellipse cx="862" cy="108" rx="5" ry="3" fill="#fff3bf"/>
+<!-- undercarriage and wheels -->
+<path fill="#252c32" stroke="none" d="M30 112H870V128H30Z"/>
+<circle cx="66" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="66" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="105" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="105" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="235" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="235" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="274" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="274" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="336" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="336" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="375" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="375" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="505" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="505" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="544" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="544" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="606" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="606" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="645" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="645" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="775" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="775" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/><circle cx="814" cy="128" r="9" fill="#202830" stroke="#8a969f" stroke-width="2"/><circle cx="814" cy="128" r="3.5" fill="#b7c0c6" stroke="none"/>
+</g>
+<path d="M12 143H890" stroke="#626b73" stroke-width="4"/><path d="M12 147H890" stroke="#a8afb4" stroke-width="1.5"/>
+<path d="M30 139v10" stroke="#7b858c" stroke-width="2"/><path d="M68 139v10" stroke="#7b858c" stroke-width="2"/><path d="M106 139v10" stroke="#7b858c" stroke-width="2"/><path d="M144 139v10" stroke="#7b858c" stroke-width="2"/><path d="M182 139v10" stroke="#7b858c" stroke-width="2"/><path d="M220 139v10" stroke="#7b858c" stroke-width="2"/><path d="M258 139v10" stroke="#7b858c" stroke-width="2"/><path d="M296 139v10" stroke="#7b858c" stroke-width="2"/><path d="M334 139v10" stroke="#7b858c" stroke-width="2"/><path d="M372 139v10" stroke="#7b858c" stroke-width="2"/><path d="M410 139v10" stroke="#7b858c" stroke-width="2"/><path d="M448 139v10" stroke="#7b858c" stroke-width="2"/><path d="M486 139v10" stroke="#7b858c" stroke-width="2"/><path d="M524 139v10" stroke="#7b858c" stroke-width="2"/><path d="M562 139v10" stroke="#7b858c" stroke-width="2"/><path d="M600 139v10" stroke="#7b858c" stroke-width="2"/><path d="M638 139v10" stroke="#7b858c" stroke-width="2"/><path d="M676 139v10" stroke="#7b858c" stroke-width="2"/><path d="M714 139v10" stroke="#7b858c" stroke-width="2"/><path d="M752 139v10" stroke="#7b858c" stroke-width="2"/><path d="M790 139v10" stroke="#7b858c" stroke-width="2"/><path d="M828 139v10" stroke="#7b858c" stroke-width="2"/><path d="M866 139v10" stroke="#7b858c" stroke-width="2"/>
+</svg>

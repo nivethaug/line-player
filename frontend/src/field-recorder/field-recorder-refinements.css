@@ -1,0 +1,453 @@
+/* ══════════════════════════════════════════════════════════════════════
+   Field Recorder — Cinema Edition · final polish pass
+   Balanced dock groups, 1160px cinematic frame, premium digital
+   timecode, engraved title, true status colors, metallic depth.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── 2. responsive frame: cinematic 1160px, centered, strict 16:9 ──── */
+
+.fr-player {
+  max-width: 1160px;
+  width: 100%;
+  min-width: 0;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+/* flex ancestors must be allowed to shrink below content width */
+main.flex-1,
+main .flex.flex-col.flex-1 {
+  min-width: 0;
+}
+
+.fr-player .fr-stage,
+.fr-player .fr-video-frame,
+.fr-player video {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ── 1. dock: full-width, balanced groups, single row ──────────────── */
+
+.fr-dock {
+  container-type: inline-size;
+  border: 1px solid var(--fr-metal-dark);
+  outline: 1px solid #35373a;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #292b2e 0%, #242629 55%, #212326 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    inset 0 -2px 4px rgb(0 0 0 / 0.35),
+    0 2px 6px rgb(0 0 0 / 0.28);
+  padding: 10px 16px 10px 14px;
+}
+
+.fr-stage { border-radius: 8px; }
+
+.fr-transport {
+  flex-wrap: nowrap;
+  min-width: 0;
+  width: 100%;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fr-group {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0; /* never squeeze button groups below their buttons (glitch fix) */
+}
+
+.fr-group-transport { gap: 10px; }
+.fr-group-utilities { gap: 10px; }
+
+/* timeline well absorbs the slack; controls stay one row */
+.fr-timeline-wrap {
+  flex: 1 1 0;
+  min-width: 60px; /* absorbs all slack so buttons stay inside the dock */
+  background: var(--fr-well);
+  border: 1px solid #2a2c2e;
+  border-radius: 6px;
+  box-shadow:
+    inset 0 2px 5px rgb(0 0 0 / 0.6),
+    inset 0 -1px 0 rgb(255 255 255 / 0.05);
+  background-image: none;
+}
+
+.fr-timeline { height: 34px; }
+
+/* small hardware corner details on the dock */
+.fr-dock::before,
+.fr-dock::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #101112;
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.8), 0 1px 0 rgb(255 255 255 / 0.06);
+  top: 6px;
+}
+.fr-dock::before { left: 6px; }
+.fr-dock::after { right: 6px; }
+
+/* ── 6. metallic buttons: thin top highlight, dark bottom edge,
+       1px pressed travel ───────────────────────────────────────────── */
+
+.fr-btn {
+  min-width: 38px;
+  min-height: 38px;
+  flex: 0 0 auto;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #a9acaf 0%, #94989b 55%, #8e9194 100%);
+  border: 1px solid #5f6265;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.45),
+    inset 0 -2px 2px rgb(0 0 0 / 0.3),
+    0 1px 2px rgb(0 0 0 / 0.4);
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 120ms ease;
+}
+
+.fr-btn:hover { filter: brightness(1.06); }
+
+.fr-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    inset 0 -1px 2px rgb(0 0 0 / 0.35),
+    0 0 1px rgb(0 0 0 / 0.4);
+}
+
+.fr-btn:focus-visible {
+  outline: 2px solid var(--fr-orange);
+  outline-offset: 2px;
+}
+
+/* signature orange play/pause */
+.fr-btn-play {
+  min-width: 50px;
+  min-height: 42px;
+  background: linear-gradient(180deg, #ff6b33 0%, #ff5a1f 55%, #e84e15 100%);
+  border-color: #9c360d;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    inset 0 -2px 3px rgb(0 0 0 / 0.28),
+    0 1px 3px rgb(0 0 0 / 0.45);
+}
+
+/* ── 3. premium digital timecode displays ──────────────────────────── */
+
+.fr-timecode {
+  min-width: 132px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, #0b0c0d 0%, #131415 100%);
+  border: 1px solid #43464a;
+  box-shadow:
+    inset 0 2px 4px rgb(0 0 0 / 0.75),
+    inset 0 -1px 0 rgb(255 255 255 / 0.05);
+}
+
+.fr-tc-label {
+  font-family: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+}
+
+.fr-tc-value {
+  font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 19px;
+  font-weight: 500;
+  color: #f2e9d8;
+  text-shadow: 0 0 1px rgb(242 233 216 / 0.35);
+  letter-spacing: 0.02em;
+}
+
+/* duration less prominent than current time */
+.fr-timecode-dim .fr-tc-value {
+  font-size: 15px;
+  opacity: 0.75;
+  text-shadow: none;
+}
+
+.fr-timecode-dim { min-width: 116px; }
+
+/* cohesive rhythm: tighter, even spacing between the middle groups */
+.fr-transport { gap: 14px; }
+.fr-group-transport { gap: 12px; }
+.fr-timecode-wrap { gap: 12px; }
+.fr-volume-group { gap: 12px; }
+
+.fr-volume-wrap {
+  width: 120px;
+  min-width: 120px;
+}
+
+/* ── 2b. viewfinder: corners strictly inside, subtle ───────────────── */
+
+.fr-corner {
+  width: 34px;
+  height: 34px;
+  opacity: 0.8;
+}
+.fr-corner::before { height: 2px; }
+.fr-corner::after { width: 2px; }
+.fr-corner-tl, .fr-corner-tr { top: 10px; }
+.fr-corner-bl, .fr-corner-br { bottom: 10px; }
+.fr-corner-tl, .fr-corner-bl { left: 10px; }
+.fr-corner-tr, .fr-corner-br { right: 10px; }
+
+/* crosshair: hidden until toggled (hover/focus gives a hint) */
+.fr-crosshair::before,
+.fr-crosshair::after { opacity: 0; }
+.fr-crosshair:hover::before,
+.fr-crosshair:hover::after,
+.fr-crosshair:focus-visible::before,
+.fr-crosshair:focus-visible::after { opacity: 0.7; }
+
+/* ── 4. engraved title label — condensed uppercase ─────────────────── */
+
+.fr-title {
+  position: absolute;
+  top: 14px;
+  left: 56px; /* clears the 10px+34px top-left viewfinder bracket */
+  z-index: 3;
+  max-width: 50%;
+  font-family: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #d9dadb;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.7);
+  background: rgb(35 36 38 / 0.62);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 5px;
+  padding: 3px 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── 5. playback status: PLAY orange / PAUSED white / BUFFERING amber ── */
+
+.fr-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #e6e8ea;
+  background: rgb(10 11 12 / 0.55);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 6px;
+  padding: 4px 10px;
+  pointer-events: none;
+}
+
+.fr-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c9ccce;
+}
+
+.fr-status-play { color: #ff8a5c; }
+.fr-status-play .fr-status-dot {
+  background: var(--fr-orange);
+  box-shadow: 0 0 6px hsl(20 100% 55% / 0.7);
+}
+
+/* paused: neutral cool gray/white — no warning yellow */
+.fr-status-paused { color: #e6e8ea; }
+.fr-status-paused .fr-status-dot { background: #dfe2e4; }
+
+/* buffering: amber + pulse */
+.fr-status-buffering { color: #e8b44d; }
+.fr-status-buffering .fr-status-dot {
+  background: #e8b44d;
+  animation: fr-buffer-pulse 1s ease-in-out infinite;
+}
+
+@keyframes fr-buffer-pulse {
+  50% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fr-status-buffering .fr-status-dot { animation: none; }
+}
+
+/* ── 7. timeline: brighter majors, subtle minors, slim playhead ────── */
+
+/* minor ticks every 1% (faint) painted under the major ticks */
+.fr-timeline-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    #2f3235 0,
+    #2f3235 1px,
+    transparent 1px,
+    transparent 100%
+  );
+  background-size: 1% 100%;
+  background-position: 0 calc(50% + 8px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.fr-ticks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fr-tick-major {
+  position: absolute;
+  bottom: calc(50% - 14px);
+  width: 2px;
+  height: 14px;
+  margin-left: -1px;
+  background: #6b7075;
+  border-radius: 1px;
+  box-shadow: 0 1px 0 rgb(0 0 0 / 0.5);
+}
+
+/* slim, precise orange playhead — 9px visual inset from the well's inner
+   edges so it never collides with the border at 0% or 100%.
+   Purely visual: the seek value / played fill still use the raw percentage. */
+.fr-playhead {
+  width: 10px;
+  height: 16px;
+  filter: none;
+  left: calc(14px + (100% - 28px) * (var(--pct, 0) / 100));
+}
+
+/* ── a11y remediations ───────────────────────────────────────────────── */
+
+/* volume range is visually transparent but must show a clear focus ring
+   (WCAG 2.2 AA — focus visible on the hidden-but-focusable control) */
+.fr-volume-wrap:focus-within {
+  outline: 2px solid var(--fr-orange);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.fr-vol-range:focus-visible {
+  outline: 2px solid var(--fr-orange);
+  outline-offset: 2px;
+  opacity: 0; /* keep visually transparent; ring shows via wrap + outline */
+}
+
+/* timeline: prevent page scroll during touch-drag seeking */
+.fr-timeline {
+  touch-action: none;
+}
+
+/* contrast: engraved VOLUME / TIMECODE labels on graphite — lift to #B9BCC0 */
+.fr-vol-label,
+.fr-tc-label { color: #b9bcc0; }
+
+/* status not by color alone: dot already paired with the text PLAY/PAUSED/
+   BUFFERING (verified in markup); aria-live announced. Nothing to change. */
+
+/* ── mobile tier: timeline gets its own row, dock wraps compactly ────── */
+@media (max-width: 600px) {
+  .fr-transport {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    justify-content: center;
+  }
+  .fr-timeline-wrap {
+    flex: 1 1 100%;
+    order: -1;
+    min-width: 100%;
+  }
+  .fr-timecode { min-width: 92px; }
+  .fr-timecode-dim { min-width: 80px; }
+  .fr-volume-wrap { width: 72px; min-width: 72px; }
+  .fr-btn { min-width: 36px; min-height: 36px; }
+  .fr-btn-essential { min-width: 44px; min-height: 44px; } /* play/mute/fullscreen keep WCAG-ideal targets */
+  .fr-btn-play { min-width: 48px; min-height: 44px; }
+  .fr-transport { row-gap: 10px; column-gap: 8px; } /* spacing between enlarged targets */
+}
+
+/* captions with no tracks: keyboard-perceivable disabled state (aria-disabled,
+   stays in tab order so SR users hear the reason in its accessible name) */
+.fr-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── reduced motion: cover all decorative motion ─────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .fr-btn { transition: none; }
+  .fr-btn:active { transform: none; }
+  .fr-btn-playing { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), inset 0 -2px 3px rgb(0 0 0 / 0.28); }
+  .fr-vjs-skin .media-buffering-indicator .media-buffering-indicator-spinner-icon {
+    animation-duration: 2.4s !important; /* slowed, not removed — still signals buffering */
+  }
+}
+
+/* ── responsive: compress on smaller screens, single row holds ─────── */
+
+@media (max-width: 1024px) {
+  .fr-timecode { min-width: 92px; padding: 3px 7px; }
+  .fr-timecode-dim { min-width: 82px; }
+  .fr-tc-value { font-size: 14px; }
+  .fr-timecode-dim .fr-tc-value { font-size: 12px; }
+  .fr-volume-wrap { width: 84px; min-width: 84px; }
+  .fr-btn { min-width: 34px; min-height: 34px; }
+  .fr-btn-essential { min-width: 40px; min-height: 40px; } /* well above 24px floor */
+  .fr-btn-play { min-width: 44px; min-height: 38px; }
+  .fr-transport { gap: 7px; }
+  .fr-group-transport { gap: 7px; }
+  .fr-group-utilities { gap: 5px; }
+}
+
+@media (max-width: 720px) {
+  .fr-player { padding: 0 8px; }
+  .fr-title { max-width: 55%; font-size: 10px; left: 14px; }
+  .fr-status { font-size: 10px; padding: 3px 8px; }
+  .fr-tick-major { display: none; }
+  .fr-timecode { min-width: 0; }
+  .fr-timecode-dim { min-width: 0; }
+  .fr-volume-wrap { width: auto; min-width: 0; }
+  .fr-dock::before, .fr-dock::after { display: none; }
+}
+
+/* ── container query: compress the dock whenever IT is narrow ─────────
+   (the two-column player layout can make the dock narrow on wide
+   viewports — viewport media queries alone can't catch that) */
+@container (max-width: 760px) {
+  .fr-timecode { min-width: 92px; padding: 3px 7px; }
+  .fr-timecode-dim { min-width: 82px; }
+  .fr-tc-value { font-size: 14px; }
+  .fr-timecode-dim .fr-tc-value { font-size: 12px; }
+  .fr-volume-wrap { width: 84px; min-width: 84px; }
+  .fr-btn { min-width: 34px; min-height: 34px; }
+  .fr-btn-essential { min-width: 40px; min-height: 40px; }
+  .fr-btn-play { min-width: 44px; min-height: 38px; }
+  .fr-transport { gap: 7px; }
+  .fr-group-transport { gap: 7px; }
+  .fr-group-utilities { gap: 5px; }
+}
+
+@container (max-width: 640px) {
+  .fr-transport { flex-wrap: wrap; row-gap: 8px; justify-content: center; }
+  .fr-timeline-wrap { flex: 1 1 100%; order: -1; min-width: 100%; }
+  .fr-timecode { min-width: 0; }
+  .fr-timecode-dim { min-width: 0; }
+  .fr-volume-wrap { width: auto; min-width: 0; }
+  .fr-btn { min-width: 36px; min-height: 36px; }
+  .fr-btn-essential { min-width: 44px; min-height: 44px; }
+  .fr-btn-play { min-width: 48px; min-height: 44px; }
+  .fr-transport { row-gap: 10px; column-gap: 8px; }
+}

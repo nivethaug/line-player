@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" role="img" aria-label="Red bookmark playhead">
+  <path d="M5 2H27V45L16 37L5 45Z" fill="#B83227" stroke="#2B211B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M8 5H24V34" fill="none" stroke="#E86A54" stroke-width="2" opacity=".9"/>
+  <path d="M7 4H25" stroke="#F8D8C2" stroke-width="1.4"/>
+  <path d="M16 37L16 42" stroke="#7F211B" stroke-width="1.2"/>
+</svg>

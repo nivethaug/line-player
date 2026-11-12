@@ -1,0 +1,1736 @@
+/* ── Line — Transit Video Player ─────────────────────────────────────── */
+
+/* Hide the default v10 skin chrome — the transit dock replaces it. The skin
+   wrapper stays in the DOM (the store's fullscreen action targets it). */
+.ln-skin [class*="control"],
+.ln-skin [class*="bar"],
+.ln-skin [class*="menu"],
+.ln-skin [class*="settings"],
+.ln-skin [class*="slider"],
+.ln-skin button {
+  display: none !important;
+  pointer-events: none !important;
+}
+.ln-skin .media-title,
+.ln-skin .media-status-announcer,
+.ln-skin .video-status-indicators,
+.ln-skin .media-poster-image {
+  pointer-events: none !important;
+}
+.ln-skin .media-title,
+.ln-skin .media-status-announcer,
+.ln-skin .video-status-indicators {
+  display: none;
+}
+.ln-skin video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.ln-skin:fullscreen {
+  background: #000;
+}
+.ln-skin:fullscreen video {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
+:root {
+  --ln-yellow: #ffc107;
+  --ln-blue: #1e40af;
+  --ln-green: #10b981;
+  --ln-red: #ef4444;
+  --ln-ivory: #f8f5eb;
+  --ln-navy: #111827;
+  --ln-secondary: #475569;
+  --ln-border: #d6d3c8;
+  /* theme contract defaults (Metro Blue) — overridden per theme on .ln-player-card */
+  --ln-accent: #ffc107;
+  --ln-train-body: var(--ln-blue);
+  --ln-train-ink: #111827;
+  --ln-on-route: #ffffff;
+  --ln-card-bg: #ffffff;
+  --ln-ctrl-bg: #ffffff;
+  --ln-ctrl-hover: #f8f5eb;
+  --ln-station-bg: #ffffff;
+  --ln-ink: #111827;
+  --ln-ink-muted: #475569;
+  --ln-sign-ink: #ffffff;
+  --ln-sign-muted: #d7dbe4;
+  --ln-dark-hover: #000000;
+  --ln-focus: #b45309;
+  --ln-check-ink: #111827;
+}
+
+/* ── page shell ── */
+.ln-page {
+  min-height: 100%;
+  background: var(--ln-ivory);
+  color: var(--ln-navy);
+  font-family: "Inter", system-ui, sans-serif;
+  overflow-y: auto;
+  padding: 40px 24px 48px;
+}
+.ln-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── header ── */
+.ln-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ln-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--ln-blue);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.ln-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.1;
+}
+.ln-header .ln-sub {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ln-secondary);
+  margin-top: 2px;
+}
+.ln-skin-tab {
+  margin-left: auto;
+  border: 1px solid var(--ln-border);
+  background: #fff;
+  color: var(--ln-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ── main two columns ── */
+.ln-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.86fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── player frame ── */
+.ln-player-card {
+  --ln-train-body: var(--ln-blue);
+  background: var(--ln-card-bg);
+  border: 1px solid var(--ln-border);
+  border-radius: 20px;
+  box-shadow: 0 12px 32px -18px rgba(17, 24, 39, 0.28);
+  padding: 16px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ln-video-frame {
+  position: relative;
+  min-width: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid var(--ln-navy);
+  background: #000;
+  aspect-ratio: 16 / 9;
+}
+.ln-video-frame video {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* center the videojs media inside VideoSkin */
+.ln-skin {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── destination sign ── */
+/* sign bar: sits above the video in normal flow */
+.ln-sign-bar {
+  display: flex;
+  align-items: stretch;
+  background: var(--ln-navy);
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+}
+.ln-sign {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 14px;
+  color: var(--ln-sign-ink);
+  flex: 1;
+  min-width: 0;
+}
+.ln-sign-top {
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.ln-sign-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--ln-accent);
+  flex-shrink: 0;
+}
+.ln-sign-bottom {
+  font-size: 11.5px;
+  color: var(--ln-sign-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* line-number roundel, like a metro line badge */
+.ln-sign-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 7px;
+  border-radius: 999px;
+  background: var(--ln-accent);
+  color: var(--ln-train-ink);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  vertical-align: -3px;
+}
+/* arrival state: sign is emphasised and slides in */
+.ln-sign-arriving {
+  border-left: 4px solid var(--ln-accent);
+  padding-left: 10px;
+  animation: ln-sign-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ln-sign-bar:has(.ln-sign-arriving) {
+  border-top: 3px solid var(--ln-accent);
+}
+.ln-sign-eyebrow {
+  font-size: 12.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.ln-sign-arriving .ln-sign-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 800;
+}
+@keyframes ln-sign-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ln-sign-arriving {
+    animation: none;
+  }
+}
+
+/* ── transit route: metro-map strip ──
+   A cased route line (Beck-style outline), interchange-ring stations,
+   bordered name plates that alternate above/below the line with a short
+   leader tick, and a square end-of-line terminus plate. */
+.ln-route-wrap {
+  position: relative;
+  /* room for one plate row above and one below the line */
+  padding: 58px 18px 56px;
+  touch-action: none;
+  border-radius: 14px;
+  border: 1px solid var(--ln-border);
+  /* map tones, all derived from the active theme */
+  --ln-map-land: color-mix(in srgb, var(--ln-card-bg) 90%, var(--ln-navy));
+  --ln-map-block: color-mix(in srgb, var(--ln-navy) 11%, transparent);
+  --ln-map-street: color-mix(in srgb, var(--ln-navy) 15%, transparent);
+  --ln-map-road: color-mix(in srgb, var(--ln-yellow) 55%, var(--ln-card-bg));
+  --ln-map-road-edge: color-mix(in srgb, var(--ln-navy) 26%, transparent);
+  --ln-map-park: color-mix(in srgb, var(--ln-green) 26%, transparent);
+  --ln-map-water: color-mix(in srgb, #3f8fd2 24%, var(--ln-card-bg)); /* always a cool blue, whatever the line colour */
+  --ln-map-shore: color-mix(in srgb, #3f8fd2 55%, transparent);
+  --ln-map-ink: color-mix(in srgb, var(--ln-navy) 55%, transparent);
+  --ln-map-tree: color-mix(in srgb, var(--ln-green) 55%, transparent);
+}
+/* decorative map layer; the route, stations and train paint above it */
+.ln-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  pointer-events: none;
+}
+.ln-route-track {
+  z-index: 1;
+}
+.ln-route-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  /* upcoming route = line colour; the green done-fill covers it up to the train */
+  background: var(--ln-blue);
+  /* map casing: pale gap + thin dark outline around the whole line */
+  box-shadow: 0 0 0 2px var(--ln-card-bg), 0 0 0 3.5px color-mix(in srgb, var(--ln-navy) 35%, transparent);
+  cursor: pointer;
+}
+.ln-route-done {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--ln-green);
+  border-radius: 999px;
+}
+.ln-station {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 999px;
+}
+.ln-station:focus-visible {
+  outline: 3px solid var(--ln-focus);
+  outline-offset: 2px;
+}
+/* other metro lines crossing the route at interchange stations (decorative) */
+.ln-xline {
+  position: absolute;
+  top: 50%;
+  width: 5px;
+  height: 104px;
+  margin-left: -2.5px;
+  border-radius: 999px;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.9;
+  box-shadow: 0 0 0 1.5px var(--ln-card-bg);
+}
+.ln-xline-a {
+  background: #7c3aed;
+  transform: translateY(-50%) rotate(24deg);
+}
+.ln-xline-b {
+  background: #0891b2;
+  transform: translateY(-50%) rotate(-24deg);
+}
+/* current station: soft radar pulse */
+.ln-station-dot {
+  position: relative;
+}
+.ln-station-current .ln-station-dot::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 2px solid var(--ln-yellow);
+  pointer-events: none;
+  animation: ln-pulse 1.8s ease-out infinite;
+}
+@keyframes ln-pulse {
+  from {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ln-station-current .ln-station-dot::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+/* interchange ring: white disc, thick line-colour ring */
+.ln-station-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--ln-station-bg);
+  border: 3.5px solid var(--ln-blue);
+  box-shadow: 0 0 0 2px var(--ln-card-bg);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ln-station:hover .ln-station-dot {
+  transform: scale(1.12);
+}
+/* passed station: solid green with a tick */
+.ln-station-done .ln-station-dot {
+  background: var(--ln-green);
+  border-color: var(--ln-green);
+}
+/* current station: double interchange ring — dark inner ring + yellow halo */
+.ln-station-current .ln-station-dot {
+  background: var(--ln-yellow);
+  border-color: var(--ln-train-ink);
+  box-shadow: 0 0 0 2px var(--ln-card-bg), 0 0 0 5px var(--ln-yellow);
+}
+.ln-station-check {
+  color: var(--ln-check-ink, #ffffff);
+}
+.ln-station-train-mini {
+  color: var(--ln-train-ink);
+}
+/* terminus: square end-of-line plate with the flag, never a generic completed one */
+.ln-station-terminus .ln-station-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--ln-navy);
+  border-color: var(--ln-navy);
+  color: var(--ln-sign-ink);
+}
+/* name plate: bordered label with a leader tick down to the station */
+.ln-station-label {
+  position: absolute;
+  bottom: calc(100% - 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 8px 4px;
+  border-radius: 6px;
+  background: var(--ln-card-bg);
+  border: 1.5px solid var(--ln-border);
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.08);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ln-ink);
+  white-space: nowrap;
+  line-height: 1.25;
+  text-align: center;
+  pointer-events: none;
+}
+.ln-station-label::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 2px;
+  height: 7px;
+  margin-left: -1px;
+  background: var(--ln-border);
+}
+.ln-station-label small {
+  display: block;
+  margin-top: 1px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ln-ink-muted);
+  font-size: 10px;
+  line-height: 1.2;
+}
+.ln-station-current .ln-station-label {
+  color: var(--ln-blue);
+  border-color: var(--ln-blue);
+}
+.ln-station-current .ln-station-label::after {
+  background: var(--ln-blue);
+}
+.ln-station-done .ln-station-label {
+  color: var(--ln-ink-muted);
+}
+.ln-station-terminus .ln-station-label {
+  border-color: var(--ln-navy);
+}
+/* alternate plates sit below the line, like names on a real route map */
+.ln-station-alt .ln-station-label {
+  bottom: auto;
+  top: calc(100% - 2px);
+}
+.ln-station-alt .ln-station-label::after {
+  top: auto;
+  bottom: 100%;
+}
+/* edge stations: align plates inward so they never clip off the card;
+   the leader tick stays centred on the station (22px in from the plate edge) */
+.ln-station-label.ln-label-start {
+  left: 0;
+  transform: none;
+  text-align: left;
+}
+.ln-station-label.ln-label-start::after {
+  left: 21px;
+}
+.ln-station-label.ln-label-end {
+  left: auto;
+  right: 0;
+  transform: none;
+  text-align: right;
+}
+.ln-station-label.ln-label-end::after {
+  left: auto;
+  right: 21px;
+}
+
+/* train playhead — the single moving marker, centered on the route line.
+   Smooth left transition during playback; exact (no transition) while dragging. */
+.ln-train {
+  position: absolute;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  /* one-car train stays fully inside the track */
+  --ln-half: 40px; /* half the desktop car (80px) */
+  left: var(--ln-pct);
+  z-index: 5;
+  transition: none; /* position is painted every frame from the video clock */
+}
+.ln-train-drag {
+  transition: none;
+}
+@media (max-width: 560px) {
+  .ln-train {
+    --ln-half: 30px; /* half the mobile car (60px) */
+  }
+}
+.ln-train:active {
+  cursor: grabbing;
+}
+.ln-train:focus-visible {
+  outline: 3px solid var(--ln-focus);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+/* docking: doors slide open and the interior lights up while the arrival sign shows */
+.ln-car-door {
+  transition: transform 0.45s ease 0.15s;
+  transform-box: fill-box;
+}
+.ln-car-interior {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.ln-train-docked .ln-car-door-l {
+  transform: translateX(-11px);
+}
+.ln-train-docked .ln-car-door-r {
+  transform: translateX(11px);
+}
+.ln-train-docked .ln-car-interior {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ln-car-door,
+  .ln-car-interior {
+    transition: none;
+  }
+}
+.ln-train-svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px; /* one coach + cab, 336:126 viewBox */
+  height: 30px;
+  max-width: none;
+  filter: drop-shadow(0 3px 5px rgba(17, 24, 39, 0.45));
+  pointer-events: none;
+}
+@media (max-width: 560px) {
+  .ln-train-svg {
+    width: 60px;
+    height: 22.5px;
+  }
+}
+/* seek-preview tooltip: live Mux frame + chapter name + timestamp.
+   Positioned in px (already clamped in JS so it never leaves the track). */
+.ln-route-tooltip {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  transform: translateX(-50%);
+  background: var(--ln-navy);
+  color: var(--ln-sign-ink);
+  padding: 5px;
+  border-radius: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 30;
+  box-shadow: 0 10px 24px -8px rgba(17, 24, 39, 0.5);
+  transition: left 120ms ease-out;
+}
+.ln-tooltip-thumb {
+  display: block;
+  width: 160px;
+  height: 90px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.ln-tooltip-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 6px 3px;
+}
+.ln-tooltip-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 118px;
+}
+.ln-tooltip-time {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ln-accent);
+  font-variant-numeric: tabular-nums;
+}
+.ln-route-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ln-navy);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ln-route-tooltip {
+    transition: none;
+  }
+}
+
+/* mobile: current-chapter label under the route (labels are hidden ≤479px) */
+.ln-route-mobile-label {
+  display: none;
+}
+
+/* live region for chapter jumps */
+.ln-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── controls row ── */
+.ln-controls {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.ln-ctrl {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--ln-border);
+  background: var(--ln-ctrl-bg);
+  color: var(--ln-ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  flex-shrink: 0;
+}
+.ln-ctrl:hover {
+  background: var(--ln-ctrl-hover);
+}
+.ln-ctrl:focus-visible {
+  outline: 3px solid var(--ln-focus);
+  outline-offset: 1px;
+}
+.ln-ctrl[aria-pressed="true"],
+.ln-ctrl-active {
+  background: var(--ln-blue);
+  border-color: var(--ln-blue);
+  color: var(--ln-on-route);
+}
+.ln-ctrl-play {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--ln-navy);
+  border-color: var(--ln-navy);
+  color: var(--ln-sign-ink);
+}
+.ln-ctrl-play:hover {
+  background: var(--ln-dark-hover);
+}
+.ln-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ln-ink);
+  padding: 0 8px;
+  white-space: nowrap;
+}
+.ln-time span {
+  color: var(--ln-ink-muted);
+  font-weight: 500;
+}
+.ln-spacer {
+  flex: 1;
+  min-width: 10px;
+}
+.ln-vol {
+  width: 96px;
+  accent-color: var(--ln-blue);
+  height: 36px;
+  cursor: pointer;
+}
+.ln-speed {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--ln-border);
+  background: var(--ln-ctrl-bg);
+  color: var(--ln-ink);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  padding: 0 8px;
+}
+.ln-speed:focus-visible {
+  outline: 3px solid var(--ln-focus);
+  outline-offset: 1px;
+}
+
+/* ── theme selector: preview cards ──────────────────────────────────── */
+.ln-themes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ln-themes-head {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  color: var(--ln-ink);
+}
+.ln-themes-head svg {
+  align-self: center;
+  color: var(--ln-blue);
+}
+.ln-themes-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.ln-themes-sub {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ln-ink-muted);
+}
+.ln-themes-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 8px 8px 2px;
+  overflow: visible;
+}
+.ln-theme-card {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: 13px;
+  border: 1.5px solid;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+}
+.ln-theme-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(7, 20, 41, 0.14);
+}
+.ln-theme-card:focus-visible {
+  outline: 3px solid var(--ln-focus);
+  outline-offset: 2px;
+}
+.ln-theme-card.ln-theme-active {
+  border-color: var(--ln-focus);
+  box-shadow: 0 0 0 1px var(--ln-focus), 0 0 12px color-mix(in srgb, var(--ln-focus) 28%, transparent);
+}
+.ln-theme-check {
+  position: absolute;
+  top: -7px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--ln-focus);
+  color: var(--ln-check-ink);
+  box-shadow: 0 0 0 2px var(--ln-card-bg);
+}
+.ln-theme-card.ln-theme-active .ln-theme-check {
+  display: flex;
+}
+.ln-theme-scene {
+  position: relative;
+  width: 100%;
+  height: 26px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ln-navy) 6%, transparent);
+  flex-shrink: 0;
+}
+.ln-theme-scene .ln-tp-route {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 5px;
+  border-radius: 999px;
+  background: var(--tc-route);
+  display: block;
+}
+.ln-theme-scene .ln-tp-node {
+  position: absolute;
+  left: 30%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: var(--tc-station);
+  border: 2px solid var(--tc-route);
+  display: block;
+}
+.ln-theme-scene .ln-tp-train {
+  position: absolute;
+  left: 68%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--tc-train);
+  border: 2px solid var(--tc-train-ink);
+  display: block;
+}
+.ln-theme-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  color: var(--tc-name);
+  overflow-wrap: break-word;
+}
+@media (max-width: 900px) {
+  .ln-themes-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .ln-themes-row {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ln-theme-card {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+/* chapters button (mobile) */
+.ln-chapters-btn {
+  display: none;
+}
+
+/* ── info panel ── */
+.ln-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ln-info-card {
+  background: #fff;
+  border: 1px solid var(--ln-border);
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+.ln-info-card h2 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ln-secondary);
+  margin: 0 0 10px;
+}
+.ln-desc {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ln-navy);
+  margin: 0;
+}
+.ln-desc strong {
+  color: var(--ln-blue);
+}
+.ln-interactions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ln-navy);
+}
+.ln-interactions li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.ln-interactions kbd {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--ln-border);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  padding: 2px 7px;
+  background: var(--ln-ivory);
+  white-space: nowrap;
+}
+.ln-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 13px;
+}
+.ln-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ln-legend-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.ln-legend-done {
+  background: var(--ln-green);
+  color: var(--ln-check-ink);
+}
+.ln-legend-current {
+  background: var(--ln-yellow);
+  border: 2px solid var(--ln-navy);
+  color: var(--ln-navy);
+}
+.ln-legend-upcoming {
+  background: var(--ln-station-bg);
+  border: 2.5px solid var(--ln-blue);
+}
+.ln-legend-terminus {
+  background: var(--ln-navy);
+  color: #fff;
+  border-radius: 6px;
+}
+.ln-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ln-swatch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ln-secondary);
+  border: 1px solid var(--ln-border);
+  border-radius: 999px;
+  padding: 4px 9px 4px 5px;
+}
+.ln-swatch i {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  display: block;
+}
+.ln-typo p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ln-navy);
+  line-height: 1.5;
+}
+.ln-typo .ln-typo-big {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── responsive preview cards ── */
+.ln-previews {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.ln-preview-card {
+  background: #fff;
+  border: 1px solid var(--ln-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ln-preview-card h3 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ln-navy);
+  margin: 0;
+}
+.ln-preview-card h3 small {
+  color: var(--ln-secondary);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.ln-preview-stage {
+  border: 1px dashed var(--ln-border);
+  border-radius: 12px;
+  background: var(--ln-ivory);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  min-height: 120px;
+}
+.ln-mini-route {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: #e3e0d4;
+}
+.ln-mini-route::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+}
+.ln-mini-dot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+.ln-mini-note {
+  font-size: 12px;
+  color: var(--ln-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── implementation summary strip ── */
+.ln-summary {
+  border-top: 1px solid var(--ln-border);
+  padding-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  align-items: baseline;
+  font-size: 12.5px;
+  color: var(--ln-secondary);
+}
+.ln-summary strong {
+  color: var(--ln-navy);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── responsive ── */
+@media (max-width: 1023px) {
+  .ln-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ln-sign-top {
+    font-size: 12px;
+  }
+  .ln-sign-bottom {
+    font-size: 10.5px;
+  }
+  .ln-station-label {
+    font-size: 10.5px;
+  }
+  .ln-previews {
+    grid-template-columns: 1fr;
+  }
+  .ln-header h1 {
+    font-size: 22px;
+  }
+}
+@media (max-width: 700px) {
+  .ln-route-wrap {
+    padding: 50px 22px 48px;
+  }
+  .ln-station-label small {
+    font-size: 9.5px; /* keep timestamps on tablets — stagger prevents collisions */
+  }
+  .ln-station-label {
+    font-size: 10px;
+    padding: 2px 6px 3px;
+  }
+}
+@media (max-width: 479px) {
+  .ln-page {
+    padding: 24px 14px 32px;
+  }
+  .ln-skin-tab {
+    display: none;
+  }
+  .ln-station-label {
+    display: none;
+  }
+  .ln-route-wrap {
+    padding: 30px 22px 14px;
+  }
+  .ln-xline {
+    height: 42px;
+  }
+  .ln-route-mobile-label {
+    position: relative;
+    z-index: 1;
+  }
+  .ln-route-mobile-label {
+    display: block;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ln-blue);
+  }
+  .ln-route-mobile-label small {
+    display: block;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--ln-secondary);
+    font-size: 10.5px;
+  }
+  .ln-vol {
+    display: none;
+  }
+  .ln-sign {
+    top: 8px;
+    left: 8px;
+    padding: 6px 10px;
+  }
+  .ln-sign-bottom {
+    font-size: 10px;
+  }
+  .ln-chapters-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid var(--ln-border);
+    background: var(--ln-ctrl-bg);
+    color: var(--ln-ink);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .ln-chapters-btn:focus-visible {
+    outline: 3px solid var(--ln-focus);
+    outline-offset: 1px;
+  }
+  .ln-controls {
+    gap: 6px;
+  }
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ln-route-done,
+  .ln-station-dot,
+  .ln-train,
+  .ln-train-badge {
+    transition: none !important;
+  }
+}
+
+
+/* ── a11y refinements ───────────────────────────────────────────────── */
+
+/* the slider is a childless overlay on the route track (stations are siblings) */
+.ln-route-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.ln-route-slider:focus-visible {
+  outline: 3px solid var(--ln-focus);
+  outline-offset: 6px;
+}
+
+/* unavailable control (e.g. captions with no track): visible, honest, inert */
+.ln-ctrl[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* comfortable thumb targets on touch-size screens (play is already 48px) */
+@media (max-width: 700px) {
+  .ln-controls .ln-ctrl:not(.ln-ctrl-play) {
+    width: 44px;
+    height: 44px;
+  }
+  .ln-controls .ln-speed {
+    min-width: 44px;
+    height: 44px;
+  }
+}
+
+/* ══ app mode: one centred, phone-width column ═══════════════════════════ */
+.ln-page {
+  padding: 18px 12px 32px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--ln-yellow) 14%, transparent), transparent 70%),
+    var(--ln-ivory);
+}
+.ln-shell {
+  max-width: 480px;
+  gap: 16px;
+}
+.ln-columns {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ln-player-card {
+  border-radius: 28px;
+  padding: 14px 14px 16px;
+  gap: 14px;
+  box-shadow: 0 24px 48px -24px rgba(17, 24, 39, 0.45), 0 2px 0 rgba(255, 255, 255, 0.6) inset;
+}
+.ln-video-frame {
+  border-radius: 20px;
+}
+.ln-route-wrap {
+  border-radius: 18px;
+}
+.ln-map {
+  border-radius: 18px;
+}
+
+/* compact line-colour picker under the player */
+.ln-themes-head {
+  gap: 6px;
+}
+.ln-themes-sub {
+  display: none;
+}
+.ln-themes-title {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ln-ink-muted);
+}
+.ln-themes-row {
+  gap: 8px;
+  padding: 6px 6px 2px;
+}
+.ln-theme-card {
+  padding: 7px 6px;
+  gap: 5px;
+  border-radius: 14px;
+}
+.ln-theme-scene {
+  height: 20px;
+}
+.ln-theme-name {
+  font-size: 11.5px;
+}
+
+/* keyboard & touch help: a quiet disclosure, not a panel */
+.ln-kbd {
+  border-top: 1px solid var(--ln-border);
+  padding-top: 4px;
+  color: var(--ln-ink);
+}
+.ln-kbd summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ln-ink-muted);
+  cursor: pointer;
+  border-radius: 10px;
+}
+.ln-kbd summary:focus-visible {
+  outline: 3px solid var(--ln-focus);
+  outline-offset: 2px;
+}
+.ln-kbd .ln-interactions {
+  margin: 4px 0 6px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+}
+@media (max-width: 479px) {
+  .ln-page {
+    padding: 0 0 24px;
+  }
+  .ln-shell {
+    max-width: none;
+    gap: 0;
+  }
+  /* on a phone the sheet is the screen: edge to edge, no card chrome */
+  .ln-player-card {
+    border-radius: 0 0 28px 28px;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    padding: 12px 12px 16px;
+  }
+}
+
+/* edge name plates: start/end flush with the line ends (button is 44px wide, so 22px = line end) */
+.ln-station-label.ln-label-start {
+  left: 22px;
+}
+.ln-station-label.ln-label-start::after {
+  left: 2px;
+}
+.ln-station-label.ln-label-end {
+  right: 22px;
+}
+.ln-station-label.ln-label-end::after {
+  right: 2px;
+}
+
+/* ══ device preview: floating switcher + framed tablet / phone ═══════════ */
+.ln-page:not([data-embed]) {
+  padding-bottom: 92px; /* clear the floating bar */
+}
+.ln-page:not([data-embed]) .ln-shell {
+  max-width: 760px;
+}
+@media (max-width: 767px) {
+  /* a real phone is already the phone view */
+  .ln-viewbar {
+    display: none !important;
+  }
+  .ln-page:not([data-embed]) {
+    padding-bottom: 24px;
+  }
+}
+.ln-viewbar {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+.ln-viewbtn {
+  min-height: 44px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #e5e7eb;
+  font: 600 13px/1 "Inter", system-ui, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.ln-viewbtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.ln-viewbtn:focus-visible {
+  outline: 3px solid #fbbf24;
+  outline-offset: 1px;
+}
+.ln-viewbtn-on {
+  background: #fff;
+  color: #111827;
+}
+.ln-viewbtn-on:hover {
+  background: #fff;
+}
+.ln-device {
+  margin: 0 auto;
+  box-sizing: content-box;
+  border: 10px solid #111827;
+  border-radius: 38px;
+  background: #111827;
+  box-shadow: 0 30px 60px -24px rgba(17, 24, 39, 0.6);
+  overflow: hidden;
+  max-width: calc(100% - 20px);
+  height: min(780px, calc(100vh - 190px));
+  min-height: 460px;
+}
+.ln-device-phone {
+  width: 375px;
+}
+.ln-device-tablet {
+  width: 768px;
+  border-radius: 30px;
+}
+.ln-device-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--ln-ivory);
+}
+/* inside a frame the page is the device screen */
+.ln-page[data-embed] {
+  min-height: 0;
+}
+.ln-page[data-embed] .ln-shell {
+  max-width: 880px;
+}
+
+/* wide screens: the view switcher becomes a vertical rail to the right of the player,
+   so it never sits over the controls. Narrower screens keep the bottom pill above. */
+@media (min-width: 1100px) {
+  .ln-page:not([data-embed]) {
+    padding-bottom: 32px;
+  }
+  .ln-viewbar {
+    left: calc(50% + 410px);
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    border-radius: 22px;
+    padding: 6px;
+  }
+  .ln-viewbtn {
+    flex-direction: column;
+    gap: 4px;
+    width: 64px;
+    min-height: 56px;
+    padding: 6px 4px;
+    border-radius: 16px;
+    font-size: 11px;
+  }
+}
+
+/* ══ single screen: no top bar, everything fits the viewport (no page scroll) ══ */
+.ln-page {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+.ln-page:not([data-embed]) {
+  padding-bottom: 12px;
+}
+.ln-shell {
+  width: 100%;
+}
+/* the card is as wide as the viewport height allows, so the 16:9 video shrinks
+   with the window instead of pushing the controls below the fold */
+.ln-page:not([data-embed]) .ln-shell {
+  max-width: clamp(340px, calc((100dvh - 372px) * 1.7778 + 28px), 760px);
+}
+.ln-player-card {
+  gap: 10px;
+  padding: 12px 14px 8px;
+}
+/* theme picker: a single row of small pills */
+.ln-themes-head {
+  display: none;
+}
+.ln-themes-row {
+  padding: 2px 0 0;
+  gap: 8px;
+}
+.ln-theme-card {
+  flex-direction: row;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 10px;
+  gap: 8px;
+}
+.ln-theme-scene {
+  display: none;
+}
+.ln-theme-card::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: var(--tc-route);
+  box-shadow: 0 0 0 2px var(--tc-train) inset, 0 0 0 1.5px color-mix(in srgb, var(--tc-name) 25%, transparent);
+}
+.ln-theme-name {
+  font-size: 12px;
+}
+.ln-theme-check {
+  top: -6px;
+  right: -4px;
+}
+.ln-kbd {
+  padding-top: 0;
+}
+.ln-kbd summary {
+  min-height: 36px;
+}
+.ln-device {
+  height: min(780px, calc(100dvh - 24px));
+}
+@media (max-width: 1099px) {
+  .ln-device {
+    height: min(780px, calc(100dvh - 104px));
+  }
+}
+@media (max-width: 479px) {
+  .ln-page {
+    padding: 0 0 12px;
+    align-items: flex-start;
+  }
+  .ln-theme-card {
+    padding: 6px 4px;
+  }
+  .ln-theme-card::before {
+    display: none;
+  }
+}
+
+/* ══ tablet + phone: the sheet fills the whole screen (no empty strip at the bottom) ══ */
+@media (max-width: 1023px) {
+  .ln-page,
+  .ln-page[data-embed],
+  .ln-page:not([data-embed]) {
+    padding: 0;
+    align-items: stretch;
+    background: var(--ln-card-bg, #fbf3e4);
+  }
+  .ln-page .ln-shell,
+  .ln-page[data-embed] .ln-shell,
+  .ln-page:not([data-embed]) .ln-shell {
+    max-width: none;
+    width: 100%;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  .ln-player-card {
+    flex: 1 1 auto;
+    min-height: 100dvh;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 14px 14px 12px;
+  }
+  /* spare height goes to the map, the rest pins the theme row to the bottom */
+  .ln-route-wrap {
+    flex: 1 1 auto;
+    max-height: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .ln-themes {
+    margin-top: auto;
+  }
+}
+
+@media (max-width: 1023px) {
+  .ln-inner {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ln-route-wrap {
+    max-height: 380px;
+  }
+}
+
+/* keep the map recognisable: cap how tall it may grow, and let a phone's spare height go to the video */
+@media (max-width: 1023px) {
+  .ln-route-wrap {
+    max-height: 300px;
+  }
+}
+@media (max-width: 479px) {
+  .ln-route-wrap {
+    max-height: 230px;
+  }
+  .ln-video-frame {
+    aspect-ratio: 4 / 3;
+  }
+  .ln-video-frame video {
+    object-fit: cover;
+  }
+}
+
+/* tablet-width screens keep the bottom switcher pill: leave room so it never covers the theme row */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .ln-page:not([data-embed]) .ln-player-card {
+    padding-bottom: 84px;
+  }
+}
+
+/* phones: the three theme pills share the row — never a horizontal scrollbar */
+@media (max-width: 560px) {
+  .ln-themes-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+    padding: 6px 4px 2px;
+    gap: 6px;
+  }
+  .ln-theme-card {
+    min-width: 0;
+    padding: 6px 4px;
+    gap: 5px;
+  }
+  .ln-theme-card::before {
+    width: 12px;
+    height: 12px;
+  }
+  .ln-theme-name {
+    font-size: 11.5px;
+    white-space: normal;
+    line-height: 1.15;
+  }
+}
+@media (max-width: 400px) {
+  .ln-theme-card::before {
+    display: none;
+  }
+}
+
+/* ── poster thumbnail (page load) ── */
+.ln-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: #000;
+  cursor: pointer;
+}
+.ln-poster-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ln-poster-play {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 999px;
+  background: var(--ln-accent);
+  color: var(--ln-train-ink);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.6), 0 0 0 5px rgba(255, 255, 255, 0.35);
+  transition: transform 0.18s ease;
+}
+.ln-poster:hover .ln-poster-play {
+  transform: scale(1.06);
+}
+.ln-poster:focus-visible {
+  outline: 3px solid var(--ln-focus);
+  outline-offset: -3px;
+}
+@media (max-width: 479px) {
+  .ln-poster-play {
+    width: 56px;
+    height: 56px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ln-poster-play {
+    transition: none;
+  }
+}
+
+/* inset the route by half a car so the train sits exactly on its station dots
+   and moves from the very first moment (no clamped dead zone at either end) */
+.ln-route-wrap {
+  --ln-half: 40px;
+  padding-left: calc(var(--ln-half) + 6px);
+  padding-right: calc(var(--ln-half) + 6px);
+}
+@media (max-width: 560px) {
+  .ln-route-wrap {
+    --ln-half: 30px;
+  }
+}
